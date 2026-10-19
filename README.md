@@ -68,7 +68,7 @@ basın), ardından aşağıdaki **tek satırı** kopyalayıp yapıştırın ve *
 basın:
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/saidsurucu/pttkep-eimza-mac-arm64/main/kur.sh | bash
+curl -fsSL https://raw.githubusercontent.com/adeministratorr/pttkep-eimza-mac-arm64/main/kur.sh | bash
 ```
 
 > Terminal'iniz Rosetta (x86_64) modunda açılmışsa betik bunu algılayıp kendini

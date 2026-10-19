@@ -7,7 +7,7 @@
 #
 # İki şekilde çalışır:
 #   • İnternetten tek satırla:
-#       curl -fsSL https://raw.githubusercontent.com/saidsurucu/pttkep-eimza-mac-arm64/main/kur.sh | bash
+#       curl -fsSL https://raw.githubusercontent.com/adeministratorr/pttkep-eimza-mac-arm64/main/kur.sh | bash
 #     (kaynak kodu kendisi indirir, derler ve kurar)
 #   • Depoyu zaten indirdiyseniz, klasörün içinde:  ./kur.sh
 #
@@ -15,7 +15,7 @@
 
 set -euo pipefail
 
-REPO_URL="https://github.com/saidsurucu/pttkep-eimza-mac-arm64.git"
+REPO_URL="https://github.com/adeministratorr/pttkep-eimza-mac-arm64.git"
 CLONE_DIR="$HOME/pttkep-eimza-mac-arm64"
 
 # ----- Renkli, anlaşılır mesajlar -----
