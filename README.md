@@ -1,3 +1,44 @@
+# PTT KEP E-İmza — macOS Apple Silicon (M1/M2/M3/M4) Kurulumu (arm64)
+
+PTT KEP Webmail e-imza uygulamasını **MacBook, MacBook Pro, MacBook Air, Mac mini ve iMac**'de native çalıştırın. Apple Silicon (M serisi, ARM tabanlı işlemci) için **arm64** `.app`; gömülü Java 11 ile gelir — Rosetta gerekmez, ayrı Java kurulumu gerekmez.
+
+**Kimler için:** KEP üzerinden hukuki geçerliliği olan yazışma yapan profesyoneller — avukatlar, arabulucular, bilirkişiler (KEP zorunlu meslek grupları), mali müşavirler, şirket yetkilileri ve KEP kullanan diğer tüm meslek grupları.
+
+## Kimler için?
+- **Avukatlar:** KEP üzerinden işlem, ihtar ve tebligat yapanlar (Elektronik Tebligat Yönetmeliği ile avukat, arabulucu ve bilirkişilere KEP alma ve UETS'e dahil olma zorunluluğu vardır).
+- **Arabulucular ve bilirkişiler:** Rapor ve belgeleri KEP ile gönderenler.
+- **Mali müşavirler (SMMM/YMM):** Müvekkil ve kurum yazışmalarını KEP ile yürütenler.
+- **Şirket yetkilileri:** Anonim ve limited şirketlerin e-tebligat/KEP yazışmaları (Tebligat Kanunu 7/A).
+- **Hukuk büroları ve kurumsal ekipler:** MacBook (M1/M2/M3/M4) ve iMac'te e-imza kurulumu ihtiyacı olanlar.
+
+## "Mac'te e-imza çalışmıyor" arayanlar için kısa cevaplar
+- **Neden Mac'te açılmıyor?** Uygulama Java Web Start (JNLP) tabanlı; Java Web Start Java 11 ve sonrasında kaldırıldı. Bu paket uygulamayı gömülü Java 11 ile native `.app`'e çevirir.
+- **MacBook / MacBook Pro / MacBook Air / iMac / Mac mini'de çalışır mı?** Evet — Apple Silicon (M1/M2/M3/M4) tüm Mac modelleri destekli. Intel Mac desteklenmez.
+- **Rosetta veya Java kurmam gerekir mi?** Hayır; paket ARM native (arm64) ve Java uygulamaya gömülüdür.
+- **İmza için ek olarak ne gerekir?** e-imza kartı + kart okuyucu + **arm64 AKİS sürücüsü** (aşağıdaki bölüm).
+
+## Neden Mac'te çalışmıyordu? Nasıl çözdük?
+
+- **Sorun:** PTT KEP Webmail E-İmza modern Mac'lerde hiç açılmıyordu; eski Java ile açılsa bile Retina ekranda metinler bulanıktı.
+- **Neden:** Uygulama bir Java Web Start (JNLP) uygulamasıydı; Java Web Start, Java 11 ile birlikte Oracle tarafından tamamen kaldırıldı. Ayrıca Java 8, Retina ekranlarda otomatik keskin çizim (HiDPI) yapmaz.
+- **Çözüm:** Uygulama, `jpackage` ile **gömülü arm64 Java 11** çalışma zamanı içeren native bir `.app`'e çevrildi. JNLP'nin sunucudan okuduğu `jnlp.config` adresi uygulamaya gömüldü (aksi hâlde uygulama sunucuyu bulamaz); Java 11 ile Retina'da keskin görünüm geldi.
+- **Kart erişimi:** PTT KEP jar'ı kartı TÜBİTAK ESYA API + `javax.smartcardio` ile okur; bu nedenle sistemde **arm64 AKİS sürücüsü** kurulu olması yeterlidir (koda ek yama gerekmedi).
+- **Doğrulama:** Gerçek AKİS kartı ve PIN ile imzalama Apple Silicon'da uçtan uca test edildi.
+
+## Kurulum (3 yol)
+1. **Tek satır (kaynaktan derler):** aşağıdaki "Kolay kurulum" bölümü.
+2. **Homebrew cask (hazır DMG, derleme beklemez):**
+
+```bash
+brew install --cask adeministratorr/tap/pttkep-eimza
+```
+
+3. **Hazır DMG:** [Releases](../../releases) → `PttkepEimza-arm64-*.dmg`
+
+Diğer araçlar (aynı tap): [e-Devlet E-İmza](https://github.com/adeministratorr/edevlet-eimza-mac-arm64) · [PTT UETS / e-Tebligat](https://github.com/adeministratorr/uets-eimza-mac-arm64) · [TNB Teknoloji İmza](https://github.com/adeministratorr/tnb-eimza-mac-arm64) · [UHAP İmzalama](https://github.com/adeministratorr/uhap-eimza-mac-arm64) · [UDF QuickLook](https://github.com/adeministratorr/udf-quicklook-extension) · [UYAP Doküman Editörü](https://github.com/adeministratorr/ude-mac-arm64-1)
+
+---
+
 # PTT KEP E-İmza — Native Apple Silicon (arm64) .app
 
 [PTT KEP](https://pttkep.gov.tr) Webmail E-İmza Uygulaması, bir Java Web
