@@ -1,11 +1,21 @@
-# PTT KEP E-İmza — macOS Apple Silicon (M1/M2/M3/M4) Kurulumu (arm64)
+# PTT KEP E-imza — macOS Apple Silicon kurulumu
 
-PTT KEP Webmail e-imza uygulamasını **MacBook, MacBook Pro, MacBook Air, Mac mini ve iMac**'de native çalıştırın. Apple Silicon (M serisi, ARM tabanlı işlemci) için **arm64** `.app`; gömülü Java 11 ile gelir — Rosetta gerekmez, ayrı Java kurulumu gerekmez.
+> **Kısa yanıt:** PTT KEP Webmail'de e-imza ile yazışma yapmak istiyor ancak Mac'inizde uygulama açılmıyor mu? Bu proje, PTT KEP'in Java Web Start (JNLP) istemcisini **MacBook, MacBook Pro, MacBook Air, Mac mini ve iMac**'de (Apple Silicon / M serisi / ARM tabanlı işlemci) çift tıklayla açılan native bir `.app`'e paketler: gömülü arm64 Java 11 sayesinde Rosetta veya ayrı Java kurulumu gerekmez. **Gayriresmî topluluk çalışmasıdır; PTT tarafından hazırlanmış veya onaylanmış değildir.**
+>
+> **KEP mi UETS mi?** KEP (kayıtlı e-posta) ile UETS (e-tebligat) farklı sistemlerdir; işlem kodunuz hangi arayüzden alındıysa o uygulamayı kurun — kodlar karşılıklı geçmez.
 
-**Kimler için:** KEP üzerinden hukuki geçerliliği olan yazışma yapan profesyoneller — avukatlar, arabulucular, bilirkişiler (KEP zorunlu meslek grupları), mali müşavirler, şirket yetkilileri ve KEP kullanan diğer tüm meslek grupları.
+## İlk kez kuranlar için
+
+1. **Kart ve sürücü:** e-imza kartı + kart okuyucu + **arm64 AKİS sürücüsü** gerekir: [akiskart.bilgem.tubitak.gov.tr/destek](https://akiskart.bilgem.tubitak.gov.tr/tr/destek/) → "Mac OS Arm (Apple Silicon)". Kontrol: `lipo -archs /usr/local/lib/libakisp11.dylib` → `arm64`.
+2. **En kolay kurulum:** [Releases](../../releases) → `PttkepEimza-arm64-*.dmg` (derleme yok). Homebrew isteğe bağlıdır: `brew install --cask adeministratorr/tap/pttkep-eimza`.
+3. **Başarılı kurulum:** Uygulama açıldığında KEP Webmail girişi ve imza/PIN penceresi görünür; imzalama akışı tamamlanır.
+4. **Sık hata:** "Akıllı Kart Bulunamadı" → arm64 sürücü eksik. "Geliştirici doğrulanamadı" → DMG notarize olduğu için normal açılır; kaynaktan derlemede sağ tık → **Aç**.
+5. **Önemli sınır:** Gerçek AKİS kartıyla uçtan uca imzalama doğrulandı (tek kurulumda test edildi); farklı kart/okuyucu ve sürücü sürümlerinde davranış değişebilir. Uygulama yalnızca **arm64** içindir; Intel Mac desteklenmez. İmza PIN'inizi hiçbir komuta/issue'ya yazmayın.
+
+> **Güvenlik notu:** Bu paket resmî kurum uygulaması değildir. DMG sürümü Developer ID ile imzalı ve Apple notarizasyonundan geçmiştir; sürüm notlarında `sha256` bulunur. Kaynaktan derleme ad-hoc imzalıdır; `kur.sh` betiğini çalıştırmadan önce inceleyin.
 
 ## Kimler için?
-- **Avukatlar:** KEP üzerinden işlem, ihtar ve tebligat yapanlar (Elektronik Tebligat Yönetmeliği ile avukat, arabulucu ve bilirkişilere KEP alma ve UETS'e dahil olma zorunluluğu vardır).
+- **Avukatlar:** KEP üzerinden işlem, ihtar ve tebligat yapanlar (mevzuat gereği avukat, arabulucu ve bilirkişilere KEP/UETS yükümlülüğü bulunur).
 - **Arabulucular ve bilirkişiler:** Rapor ve belgeleri KEP ile gönderenler.
 - **Mali müşavirler (SMMM/YMM):** Müvekkil ve kurum yazışmalarını KEP ile yürütenler.
 - **Şirket yetkilileri:** Anonim ve limited şirketlerin e-tebligat/KEP yazışmaları (Tebligat Kanunu 7/A).
@@ -13,7 +23,7 @@ PTT KEP Webmail e-imza uygulamasını **MacBook, MacBook Pro, MacBook Air, Mac m
 
 ## "Mac'te e-imza çalışmıyor" arayanlar için kısa cevaplar
 - **Neden Mac'te açılmıyor?** Uygulama Java Web Start (JNLP) tabanlı; Java Web Start Java 11 ve sonrasında kaldırıldı. Bu paket uygulamayı gömülü Java 11 ile native `.app`'e çevirir.
-- **MacBook / MacBook Pro / MacBook Air / iMac / Mac mini'de çalışır mı?** Evet — Apple Silicon (M1/M2/M3/M4) tüm Mac modelleri destekli. Intel Mac desteklenmez.
+- **MacBook / MacBook Pro / MacBook Air / iMac / Mac mini'de çalışır mı?** Evet — Apple Silicon (M1/M2/M3/M4 ve sonrası) modeller destekli. Intel Mac desteklenmez.
 - **Rosetta veya Java kurmam gerekir mi?** Hayır; paket ARM native (arm64) ve Java uygulamaya gömülüdür.
 - **İmza için ek olarak ne gerekir?** e-imza kartı + kart okuyucu + **arm64 AKİS sürücüsü** (aşağıdaki bölüm).
 
@@ -26,20 +36,20 @@ PTT KEP Webmail e-imza uygulamasını **MacBook, MacBook Pro, MacBook Air, Mac m
 - **Doğrulama:** Gerçek AKİS kartı ve PIN ile imzalama Apple Silicon'da uçtan uca test edildi.
 
 ## Kurulum (3 yol)
-1. **Tek satır (kaynaktan derler):** aşağıdaki "Kolay kurulum" bölümü.
+1. **Hazır DMG (en hızlı):** [Releases](../../releases) → `PttkepEimza-arm64-*.dmg`.
 2. **Homebrew cask (hazır DMG, derleme beklemez):**
 
 ```bash
 brew install --cask adeministratorr/tap/pttkep-eimza
 ```
 
-3. **Hazır DMG:** [Releases](../../releases) → `PttkepEimza-arm64-*.dmg`
+3. **Tek satır (kaynaktan derler; betiği önce inceleyin):** aşağıdaki "Kolay kurulum" bölümü.
 
 Diğer araçlar (aynı tap): [e-Devlet E-İmza](https://github.com/adeministratorr/edevlet-eimza-mac-arm64) · [PTT UETS / e-Tebligat](https://github.com/adeministratorr/uets-eimza-mac-arm64) · [TNB Teknoloji İmza](https://github.com/adeministratorr/tnb-eimza-mac-arm64) · [UHAP İmzalama](https://github.com/adeministratorr/uhap-eimza-mac-arm64) · [UDF QuickLook](https://github.com/adeministratorr/udf-quicklook-extension) · [UYAP Doküman Editörü](https://github.com/adeministratorr/ude-mac-arm64-1)
 
 ---
 
-# PTT KEP E-İmza — Native Apple Silicon (arm64) .app
+## PTT KEP E-İmza — Native Apple Silicon (arm64) .app
 
 [PTT KEP](https://pttkep.gov.tr) Webmail E-İmza Uygulaması, bir Java Web
 Start (JNLP) uygulamasıdır. Java Web Start, Java 11+ ile kaldırıldığından
