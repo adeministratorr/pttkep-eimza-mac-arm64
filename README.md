@@ -70,7 +70,7 @@ arm64 Java 11 runtime'ı** ile **çift tıklayıp açabileceğiniz native bir
 
 ---
 
-# 👩‍💼 Kolay kurulum — tek satır
+## 👩‍💼 Kolay kurulum — tek satır
 
 Programcı olmanıza gerek yok. **Terminal** uygulamasını açın (klavyede
 `Command (⌘) + Boşluk`'a basıp açılan kutuya **Terminal** yazın ve **Enter**'a
@@ -139,7 +139,7 @@ lipo -archs /usr/local/lib/libakisp11.dylib
 
 ---
 
-# 🛠️ Mühendisler için — Teknik ayrıntı
+## 🛠️ Mühendisler için — Teknik ayrıntı
 
 Yukarıdaki adımlar derlemek için yeterlidir. Bu bölüm, tek tek build hedeflerini
 ve dönüşümün **neyi nasıl** çözdüğünü açıklar. Gereksinimler kendiliğinden kurulur
