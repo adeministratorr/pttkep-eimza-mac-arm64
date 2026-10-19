@@ -125,6 +125,8 @@ en azından `arm64`) yazmalı — sadece `x86_64` yazıyorsa hâlâ Intel sürü
 lipo -archs /usr/local/lib/libakisp11.dylib
 ```
 
+> **macOS 28 / Rosetta uyarısı:** Sistemde eski **Intel** AKİS paketi kuruluysa macOS, `/Applications/Akia.app` için "bu uygulama gelecek macOS sürümünde açılmayacak" uyarısı gösterir (Rosetta desteği macOS 28'de kaldırılıyor). TÜBİTAK'ın **Arm (Apple Silicon)** paketini kurduysanız yeni sürüm `Akia ARM.app` (arm64) olarak gelir; eski `/Applications/Akia.app`'i Finder'da Çöp'e sürükleyip kaldırın. Bu uyarı e-imza akışını etkilemez — kart erişimi yukarıdaki `libakisp11.dylib` üzerinden yürür.
+
 ---
 
 # 🛠️ Mühendisler için — Teknik ayrıntı
