@@ -1,3 +1,5 @@
+![PTT KEP E-İmza — macOS istemcisi](assets/social-preview.jpg)
+
 # PTT KEP E-imza — macOS Apple Silicon kurulumu
 
 > **Kısa yanıt:** PTT KEP Webmail'de e-imza ile yazışma yapmak istiyor ancak Mac'inizde uygulama açılmıyor mu? Bu proje, PTT KEP'in Java Web Start (JNLP) istemcisini **MacBook, MacBook Pro, MacBook Air, Mac mini ve iMac**'de (Apple Silicon / M serisi / ARM tabanlı işlemci) çift tıklayla açılan native bir `.app`'e paketler: gömülü arm64 Java 11 sayesinde Rosetta veya ayrı Java kurulumu gerekmez. **Gayriresmî topluluk çalışmasıdır; PTT tarafından hazırlanmış veya onaylanmış değildir.**
