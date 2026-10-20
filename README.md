@@ -1,10 +1,12 @@
-![PTT KEP E-İmza — macOS istemcisi](assets/social-preview.jpg)
+![Mac’te PTT KEP E-İmza Kurulumu — KEP İmza Atamıyorum Sorunu](assets/social-preview.jpg)
 
-# PTT KEP E-imza — macOS Apple Silicon kurulumu
+# Mac’te PTT KEP E-İmza Kurulumu — KEP İmza Atamıyorum Sorunu
 
 > **Kısa yanıt:** PTT KEP Webmail'de e-imza ile yazışma yapmak istiyor ancak Mac'inizde uygulama açılmıyor mu? Bu proje, PTT KEP'in Java Web Start (JNLP) istemcisini **MacBook, MacBook Pro, MacBook Air, Mac mini ve iMac**'de (Apple Silicon / M serisi / ARM tabanlı işlemci) çift tıklayla açılan native bir `.app`'e paketler: gömülü arm64 Java 11 sayesinde Rosetta veya ayrı Java kurulumu gerekmez. **Gayriresmî topluluk çalışmasıdır; PTT tarafından hazırlanmış veya onaylanmış değildir.**
 >
 > **KEP mi UETS mi?** KEP (kayıtlı e-posta) ile UETS (e-tebligat) farklı sistemlerdir; işlem kodunuz hangi arayüzden alındıysa o uygulamayı kurun — kodlar karşılıklı geçmez.
+
+**Ayrıntılı Türkçe anlatım:** [Mac’te e-imza ve UYAP kurulumu, ilk kullanım ve hata çözümleri](https://ademyuce.tr/macos-eimza-uyap/).
 
 ## İlk kez kuranlar için
 
@@ -28,6 +30,8 @@
 - **MacBook / MacBook Pro / MacBook Air / iMac / Mac mini'de çalışır mı?** Evet — Apple Silicon (M1/M2/M3/M4 ve sonrası) modeller destekli. Intel Mac desteklenmez.
 - **Rosetta veya Java kurmam gerekir mi?** Hayır; paket ARM native (arm64) ve Java uygulamaya gömülüdür.
 - **İmza için ek olarak ne gerekir?** e-imza kartı + kart okuyucu + **arm64 AKİS sürücüsü** (aşağıdaki bölüm).
+- **“İşlem yapmak istediğiniz arayüzden indirin” hatası neden olur?** İşlem kodu başka bir hizmetten, örneğin UETS’den alınmış olabilir. Kodun ve imzalama istemcisinin aynı hizmete ait olduğundan emin olun.
+- **KEP ile UETS aynı mı?** Hayır. KEP kayıtlı elektronik posta, UETS ise elektronik tebligat sistemidir; giriş ve imzalama süreçleri farklıdır.
 
 ## Neden Mac'te çalışmıyordu? Nasıl çözdük?
 
