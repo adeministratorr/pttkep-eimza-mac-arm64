@@ -62,6 +62,8 @@ jobs:
           security create-keychain -p "$DEVID_P12_PASSWORD" build.keychain
           security default-keychain -s build.keychain
           security unlock-keychain -p "$DEVID_P12_PASSWORD" build.keychain
+          curl -fsSL "https://www.apple.com/certificateauthority/AppleWWDRCAG4.cer" -o /tmp/wwdr.cer
+          security import /tmp/wwdr.cer -k build.keychain 2>/dev/null || true
           security import /tmp/identity.p12 -k build.keychain -P "$DEVID_P12_PASSWORD" -T /usr/bin/codesign -T /usr/bin/security
           security set-key-partition-list -S apple-tool:,apple: -s -k "$DEVID_P12_PASSWORD" build.keychain
           rm -f /tmp/identity.p12
