@@ -62,7 +62,7 @@ endif
 
 sign-devid: ## Developer ID + hardened runtime imzala (önce: make all)
 	@test -d "$(APP)" || { echo ">> .app yok — önce: make all"; exit 1; }
-	@find "$(APP)" -type f -perm -111 \( -path '*/Contents/runtime/*' -o -name '*.dylib' -o -name '*.jnilib' \) -exec codesign --force --options runtime --timestamp --sign "$(IDENTITY)" {} +
+	@find "$(APP)" -type f \( -path '*/Contents/runtime/*' -o -name '*.dylib' -o -name '*.jnilib' \) -exec codesign --force --options runtime --timestamp --sign "$(IDENTITY)" {} +
 	@codesign --force --sign "$(IDENTITY)" --options runtime --timestamp --entitlements "$(ENT)" "$(APP)"
 	@codesign --verify --deep --strict "$(APP)" && echo ">> Developer ID imzası geçerli"
 
