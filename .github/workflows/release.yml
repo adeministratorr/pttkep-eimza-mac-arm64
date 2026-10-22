@@ -22,6 +22,9 @@ permissions:
 jobs:
   build:
     runs-on: macos-14   # Apple Silicon (arm64) runner
+    env:
+      APPLE_API_KEY_ID: ${{ secrets.APPLE_API_KEY_ID }}
+      APPLE_API_ISSUER_ID: ${{ secrets.APPLE_API_ISSUER_ID }}
     steps:
       - uses: actions/checkout@v4
 
@@ -45,6 +48,18 @@ jobs:
           APP="build/PTT KEP E-İmza.app"
           file "$APP/Contents/MacOS/PTTKEPEImza" | grep -q arm64 || { echo "Launcher arm64 değil!"; exit 1; }
           codesign --verify --strict "$APP"
+
+      - name: Developer ID imzası uygula
+        if: env.APPLE_API_KEY_ID != ''
+        run: |
+          mkdir -p "$HOME/private_keys"
+          echo "${{ secrets.APPLE_API_KEY_B64 }}" | openssl base64 -d -A -out "$HOME/private_keys/AuthKey_${APPLE_API_KEY_ID}.p8"
+          chmod 600 "$HOME/private_keys/AuthKey_${APPLE_API_KEY_ID}.p8"
+          make sign-devid
+
+      - name: Uygulamayı notarize et (submit + wait + staple)
+        if: env.APPLE_API_KEY_ID != ''
+        run: make notarize-app
 
       - name: Sürümü belirle (<APP_VERSION>_<N>)
         id: ver
@@ -72,31 +87,49 @@ jobs:
           brew list create-dmg >/dev/null 2>&1 || brew install create-dmg
           make dmg
 
+      - name: DMG'yi notarize et + staple
+        if: env.APPLE_API_KEY_ID != ''
+        env:
+          DMG_FILE: ${{ github.workspace }}/PTTKEPEImza-${{ steps.ver.outputs.tag }}-arm64.dmg
+        run: make notarize-dmg
+
+      - name: Sürüm notunu hazırla (sha256 + imza durumu)
+        env:
+          DMG_FILE: ${{ github.workspace }}/PTTKEPEImza-${{ steps.ver.outputs.tag }}-arm64.dmg
+          APP_DISPLAY: PTT KEP E-İmza
+        run: |
+          SHA=$(shasum -a 256 "$DMG_FILE" | awk '{print $1}')
+          if [ "$APPLE_API_KEY_ID" ]; then
+            IMZANOT="✅ DMG Developer ID imzalı ve Apple notarizasyonundan geçmiştir (stapled). Çift tık normal açılır; xattr gerekmez."
+          else
+            IMZANOT="⚠️ Bu build ad-hoc imzalıdır (notarize edilmedi — APPLE_API_KEY_ID secret'ı tanımlı değil). İlk açılışta sağ tık → Aç gerekir."
+          fi
+          cat > release-notes.md <<EOF
+          Native Apple Silicon (arm64) build — Rosetta gerektirmez.
+          Java gömülü gelir; ayrıca kurulum için bir paket gerekmez.
+
+          ## Kurulum
+          1. Aşağıdaki .dmg dosyasını indirip çift tıklayın; bir pencere açılır.
+          2. Açılan pencerede $APP_DISPLAY simgesini Applications klasörüne sürükleyin.
+          3. İlk açılışta Gatekeeper sorgusu çıkarsa sağ tık → Aç ile devam edin.
+
+          ## İmza durumu
+          $IMZANOT
+
+          İndirilen dosyanın bütünlüğü için sha256:
+          $SHA
+
+          ## Not
+          - ⚠️ arm64 AKİS sürücüsü ŞART: sistemde Apple Silicon (arm64) PKCS#11 modülü
+            kurulu olmalıdır (Intel-only sürücü arm64 uygulamaya yüklenmez). Kurulum için
+            README'deki "Apple Silicon AKİS sürücüsü kurulumu" bölümüne bakın.
+          - ✅ Apple Silicon'da gerçek kartla tam imzalama (sertifika → PIN → imza) doğrulandı.
+          EOF
+
       - name: GitHub Release oluştur + dosyayı ekle
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ steps.ver.outputs.tag }}
           name: ${{ steps.ver.outputs.tag }}
           files: PTTKEPEImza-${{ steps.ver.outputs.tag }}-arm64.dmg
-          body: |
-            Native Apple Silicon (arm64) PTT KEP E-İmza build — Rosetta gerektirmez.
-            Java gömülü gelir; ayrıca bir şey kurmaya gerek yok.
-
-            ## Kurulum
-            1. Aşağıdaki **`.dmg` dosyasını indirip** çift tıklayın; bir pencere açılır.
-            2. Açılan pencerede **`PTT KEP E-İmza`** simgesini, ortadaki okun gösterdiği gibi
-               yanındaki **Applications** klasörünün üzerine **sürükleyin**.
-            3. İlk açılışta macOS **"geliştirici doğrulanamadı"** diyebilir. Bunu bir kez aşmak için:
-               1. **Terminal** uygulamasını açın: `Command (⌘) + Boşluk`'a basın, **Terminal** yazıp **Enter**'a basın.
-               2. Şu satırı kopyalayın, Terminal'e yapıştırıp **Enter**'a basın:
-                  ```
-                  xattr -dr com.apple.quarantine "/Applications/PTT KEP E-İmza.app"
-                  ```
-               3. Komut bir şey yazmadan biter (normaldir). Artık uygulamayı çift tıklayarak açabilirsiniz.
-
-            ## Not
-            - ⚠️ **arm64 AKİS sürücüsü ŞART:** sistemde **Apple Silicon (arm64) AKİS** PKCS#11
-              modülü kurulu olmalıdır (Intel-only sürücü arm64 uygulamaya yüklenmez). Kurulum
-              için README'deki "Apple Silicon AKİS sürücüsü kurulumu" bölümüne bakın.
-            - ✅ Apple Silicon'da gerçek kartla **tam imzalama** (sertifika → PIN → imza)
-              doğrulandı.
+          body_path: release-notes.md
