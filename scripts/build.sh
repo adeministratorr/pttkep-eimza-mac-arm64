@@ -49,6 +49,9 @@ APP_VERSION="${APP_VERSION:-1.2.5}"
 
 CODEBASE="https://ptt.hs01.kep.tr/download"
 JAR_URL="${JAR_URL:-$CODEBASE/$MAIN_JAR}"
+# CI yedeği: repoya commitlenen vendor jar varsa önce onu kullan (ptt.hs01/api.etebligat
+# GH runner egress'inden erişilemeyebiliyor).
+[ -s "$ROOT/vendor/$MAIN_JAR" ] && JAR_URL="file://$ROOT/vendor/$MAIN_JAR"
 CONFIG_URL="$CODEBASE/config.properties"
 JAR_FILE="$DOWNLOADS/$MAIN_JAR"
 # İkon codebase'de YOK (logo.png 404) → jar içindeki images/logo.png (200x200) çıkarılır.
